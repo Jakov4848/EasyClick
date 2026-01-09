@@ -54,7 +54,8 @@ fun CircularBPMKnob(
                     if (newRotation < 0f) newRotation += 360f
 
                     // Convert to BPM and clamp
-                    val newBpm = (minBpm + (newRotation / 360f * (maxBpm - minBpm))).roundToInt()
+                    val newBpm = (minBpm + (newRotation / 360f * (maxBpm - minBpm)))
+                        .roundToInt()
                         .coerceIn(minBpm, maxBpm)
 
                     rotation = ((newBpm - minBpm).toFloat() / (maxBpm - minBpm) * 360f)

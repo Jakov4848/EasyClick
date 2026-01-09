@@ -9,14 +9,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import hr.ferit.jakovdrmic.easyclick.ui.MetronomeScreen
 import hr.ferit.jakovdrmic.easyclick.ui.NotesScreen
+import java.util.MissingFormatWidthException
 
 const val METRONOME_SCREEN = "metronome_screen"
 const val NOTES_SCREEN = "notes_screen"
 
+
 @Composable
 fun AppNavigation(soundPool: SoundPool, clickSoundId: Int) {
     val navController = rememberNavController()
-
     NavHost(
         navController = navController,
         startDestination = METRONOME_SCREEN,
@@ -26,13 +27,11 @@ fun AppNavigation(soundPool: SoundPool, clickSoundId: Int) {
             MetronomeScreen(
                 soundPool = soundPool,
                 clickSoundId = clickSoundId,
-                onNavigateToNotes = { navController.navigate(NOTES_SCREEN) }
+                navController = navController
             )
         }
         composable(NOTES_SCREEN) {
-            NotesScreen(
-                onNavigateBack = { navController.popBackStack() }
-            )
+            NotesScreen(navController = navController)
         }
     }
 }

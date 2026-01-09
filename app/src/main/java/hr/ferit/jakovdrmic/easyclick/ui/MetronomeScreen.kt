@@ -28,13 +28,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.navigation.NavController
 
 
 @Composable
 fun MetronomeScreen(
     soundPool: SoundPool,
     clickSoundId: Int,
-    onNavigateToNotes: () -> Unit
+    navController: NavController
 ) {
     var bpm by remember { mutableStateOf(60) }
     var isPlaying by remember { mutableStateOf(false) }
@@ -43,12 +44,12 @@ fun MetronomeScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Navigate to notes
+        // Notes icon (navigate to Notes)
         IconButton(
-            onClick = onNavigateToNotes,
+            onClick = {navController.navigate("notes_screen")},
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(16.dp)
+                .padding(32.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.MenuBook,
