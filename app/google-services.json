@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "976252149778",
+    "project_id": "easyclickbase",
+    "storage_bucket": "easyclickbase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:976252149778:android:68f02768fbd1ed57eaf8cb",
+        "android_client_info": {
+          "package_name": "hr.ferit.jakovdrmic.easyclick"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuNER2OyV_6eCNB6O2yvKgyrItXkaqBHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
