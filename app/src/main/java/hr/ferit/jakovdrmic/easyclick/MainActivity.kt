@@ -8,7 +8,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import hr.ferit.jakovdrmic.easyclick.ui.MetronomeScreen
 import hr.ferit.jakovdrmic.easyclick.ui.navigation.AppNavigation
 import hr.ferit.jakovdrmic.easyclick.ui.theme.EasyClickTheme
 

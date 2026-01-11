@@ -17,10 +17,17 @@ class NotesViewModel: ViewModel() {
         text = newText
     }
 
-    fun addNote(){
-        if (text.isNotBlank()){
-            notes = notes + Note(text = text)
+    fun addNote() {
+        if (text.isNotBlank()) {
+            notes = notes + Note(
+                id = System.currentTimeMillis().toString(), // unique id
+                text = text
+            )
             text = ""
         }
+    }
+
+    fun removeNote(noteId: String) {
+        notes = notes.filter { it.id != noteId }
     }
 }

@@ -9,26 +9,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import android.media.SoundPool
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
+import hr.ferit.jakovdrmic.easyclick.viewmodel.MetronomeViewModel
+import hr.ferit.jakovdrmic.easyclick.viewmodel.MetronomeViewModelFactory
 
 
 @Composable
@@ -37,16 +34,27 @@ fun MetronomeScreen(
     clickSoundId: Int,
     navController: NavController
 ) {
-    var bpm by remember { mutableStateOf(60) }
-    var isPlaying by remember { mutableStateOf(false) }
-    val coroutineScope = rememberCoroutineScope()
-    var job by remember { mutableStateOf<Job?>(null) }
+    val viewModel: MetronomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+        factory = MetronomeViewModelFactory(soundPool, clickSoundId)
+    )
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    val bpm = viewModel.bpm
+    val isPlaying = viewModel.isPlaying
 
-        // Notes icon (navigate to Notes)
+    DisposableEffect(Unit) {
+        onDispose {
+            viewModel.forceStop()
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0x7393B3F0))
+    ) {
+
         IconButton(
-            onClick = {navController.navigate("notes_screen")},
+            onClick = { navController.navigate("notes_screen") },
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(32.dp)
@@ -66,7 +74,6 @@ fun MetronomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Display BPM
             Text(
                 text = "$bpm BPM",
                 fontSize = 36.sp,
@@ -75,33 +82,13 @@ fun MetronomeScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Circular BPM knob
             CircularBPMKnob(
                 bpm = bpm,
-                onBpmChange = { bpm = it },
+                onBpmChange = { viewModel.onBpmChange(it) },
                 isPlaying = isPlaying,
-                onPlayPauseToggle = {
-                    isPlaying = !isPlaying
-                    if (isPlaying) {
-                        // Start clicking asynchronously
-                        job = coroutineScope.launch {
-                            var lastClickTime = System.currentTimeMillis()
-                            while (isPlaying) {
-                                val now = System.currentTimeMillis()
-                                val interval = 60000L / bpm
-                                if (now - lastClickTime >= interval) {
-                                    soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f)
-                                    lastClickTime = now
-                                }
-                                delay(10L)
-                            }
-                        }
-                    } else {
-                        job?.cancel()
-                    }
-                },
+                onPlayPauseToggle = { viewModel.togglePlayPause() },
                 minBpm = 20,
-                maxBpm = 500
+                maxBpm = 300
             )
         }
     }

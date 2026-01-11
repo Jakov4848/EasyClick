@@ -1,6 +1,9 @@
 package hr.ferit.jakovdrmic.easyclick.viewmodel
 
 import android.media.SoundPool
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -12,21 +15,26 @@ class MetronomeViewModel(
     private val clickSoundId: Int
 ) : ViewModel() {
 
-    var bpm: Int = 60
+    var bpm by mutableStateOf(60)
         private set
 
-    var isPlaying: Boolean = false
+    var isPlaying by mutableStateOf(false)
         private set
 
     private var job: Job? = null
 
-    fun setBpm(newBpm: Int) {
-        bpm = newBpm.coerceIn(20, 500) // clamp between 20-500
+    fun onBpmChange(newBpm: Int) {
+        bpm = newBpm
     }
 
     fun togglePlayPause() {
         isPlaying = !isPlaying
-        if (isPlaying) startClicking() else stopClicking()
+
+        if (isPlaying) {
+            startClicking()
+        } else {
+            stopClicking()
+        }
     }
 
     private fun startClicking() {
@@ -51,7 +59,12 @@ class MetronomeViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        stopClicking() // make sure job is cancelled when ViewModel is cleared
+        job?.cancel()
+    }
+    fun forceStop() {
+        isPlaying = false
+        job?.cancel()
+        job = null
     }
 }
 

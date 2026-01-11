@@ -20,6 +20,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -70,7 +71,7 @@ fun CircularBPMKnob(
 
             // Background circle
             drawArc(
-                color = Color.LightGray,
+                color = Color.White,
                 startAngle = 0f,
                 sweepAngle = 360f,
                 useCenter = false,
@@ -79,7 +80,7 @@ fun CircularBPMKnob(
 
             // Progress arc
             drawArc(
-                color = Color(0xFF6200EE),
+                color = Color.Cyan,
                 startAngle = -90f,
                 sweepAngle = rotation,
                 useCenter = false,
@@ -91,7 +92,7 @@ fun CircularBPMKnob(
             val handleX = center.x + cos(handleAngle) * radius
             val handleY = center.y + sin(handleAngle) * radius
             drawCircle(
-                color = Color.Red,
+                color = Color.Blue,
                 radius = 15f,
                 center = Offset(handleX.toFloat(), handleY.toFloat())
             )
