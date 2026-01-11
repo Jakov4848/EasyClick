@@ -25,6 +25,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,15 +41,15 @@ fun NotesScreen(
     notesViewModel: NotesViewModel = viewModel(),
     navController: NavController
 ) {
-    val notes = notesViewModel.notes
-    val text = notesViewModel.text
+    val notes by notesViewModel.notes.collectAsState()
+    val text by notesViewModel.text.collectAsState()
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color(0x7393B3F0))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0x7393B3F0))
     ) {
 
-        // Arrow back icon (navigate to Metronome)
         IconButton(
             onClick = { navController.navigate("metronome_screen") },
             modifier = Modifier
@@ -61,6 +63,8 @@ fun NotesScreen(
             )
         }
 
+
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -69,22 +73,22 @@ fun NotesScreen(
             verticalArrangement = Arrangement.Bottom
         ) {
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
             OutlinedTextField(
                 value = text,
                 onValueChange = { notesViewModel.onTextChange(it) },
+                modifier = Modifier.fillMaxWidth()
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = { notesViewModel.addNote() },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.Black,
-                    containerColor = Color.Cyan
-                )
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Cyan) // your color
             ) {
-                Text("Add Note")
+                Text("Add Note", color = Color.Black)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -93,24 +97,21 @@ fun NotesScreen(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top
             ) {
-                items(
-                    items = notes,
-                    key = { it.id } // uniquely identify each note
-                ) { note ->
+                items(notes, key = { it.id }) { note ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "Delete note",
-                            tint = androidx.compose.ui.graphics.Color.Black,
-                            modifier = Modifier
-                                .size(24.dp)
-                                .clickable { notesViewModel.removeNote(note.id) }
-                        )
+                        IconButton(
+                            onClick = { notesViewModel.removeNote(note.id) }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = "Delete Note"
+                            )
+                        }
 
                         Spacer(modifier = Modifier.width(8.dp))
 
@@ -124,8 +125,3 @@ fun NotesScreen(
         }
     }
 }
-
-
-
-
-

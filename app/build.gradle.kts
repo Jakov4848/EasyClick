@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    id("com.google.gms.google-services") version "4.4.0" // Firebase plugin
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -58,7 +58,7 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-firestore-ktx")
-    //implementation("com.google.firebase:firebase-crashlytics-ktx")
+
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
@@ -68,6 +68,7 @@ dependencies {
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation(libs.firebase.firestore)
 
 
     // Tests

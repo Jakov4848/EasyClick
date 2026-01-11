@@ -1,33 +1,59 @@
 package hr.ferit.jakovdrmic.easyclick.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import hr.ferit.jakovdrmic.easyclick.data.model.Note
+import hr.ferit.jakovdrmic.easyclick.repository.FirebaseNotesRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import java.util.*
 
-class NotesViewModel: ViewModel() {
-    var notes by mutableStateOf(listOf<Note>())
-        private set
+class NotesViewModel(
+    private val repository: FirebaseNotesRepository = FirebaseNotesRepository()
+) : ViewModel() {
 
-    var text by mutableStateOf("")
-        private set
+    // internal mutable state of notes
+    private val _notes = MutableStateFlow<List<Note>>(emptyList())
+    // read only list of notes exposed to the UI
+    val notes: StateFlow<List<Note>> = _notes.asStateFlow()
 
-    fun onTextChange(newText:String){
-        text = newText
+    // current text input in the text field
+    var text = MutableStateFlow("")
+
+    // calls listenToNotes() in the repository to get live updates
+    // updates _notes with the latest list of notes
+    private var listenerRegistration = repository.listenToNotes { updatedNotes ->
+        _notes.value = updatedNotes.sortedBy { it.createdAt }
     }
 
+    // updates the text state as the user types
+    fun onTextChange(newText: String) {
+        text.value = newText
+    }
+
+    //
     fun addNote() {
-        if (text.isNotBlank()) {
-            notes = notes + Note(
-                id = System.currentTimeMillis().toString(), // unique id
-                text = text
+        val noteText = text.value.trim()
+        if (noteText.isNotEmpty()) {
+            val note = Note(
+                id = UUID.randomUUID().toString(),
+                text = noteText,
+                createdAt = System.currentTimeMillis()
             )
-            text = ""
+            repository.addNote(note)
+            text.value = ""
         }
     }
 
     fun removeNote(noteId: String) {
-        notes = notes.filter { it.id != noteId }
+        repository.deleteNote(noteId)
+    }
+
+    // Stops listening to Firestore when the ViewModel is destroyed
+    override fun onCleared() {
+        super.onCleared()
+        listenerRegistration.remove() // stop listening when ViewModel is destroyed
     }
 }
