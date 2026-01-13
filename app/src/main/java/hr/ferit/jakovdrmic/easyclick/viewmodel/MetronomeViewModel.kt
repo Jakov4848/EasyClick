@@ -10,10 +10,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MetronomeViewModel(
-    private val soundPool: SoundPool,
-    private val clickSoundId: Int
-) : ViewModel() {
+class MetronomeViewModel : ViewModel() {
+    private var soundPool: SoundPool? = null
+    private var clickSoundId: Int = 0
+    fun init(soundPool: SoundPool, clickSoundId: Int) {
+        this.soundPool = soundPool
+        this.clickSoundId = clickSoundId
+    }
 
     var bpm by mutableStateOf(60)
         private set
@@ -21,6 +24,7 @@ class MetronomeViewModel(
     var isPlaying by mutableStateOf(false)
         private set
 
+    // coroutine that run metronome loop
     private var job: Job? = null
 
     fun onBpmChange(newBpm: Int) {
@@ -39,15 +43,10 @@ class MetronomeViewModel(
 
     private fun startClicking() {
         job = viewModelScope.launch {
-            var lastClickTime = System.currentTimeMillis()
             while (isPlaying) {
-                val now = System.currentTimeMillis()
-                val interval = 60000L / bpm
-                if (now - lastClickTime >= interval) {
-                    soundPool.play(clickSoundId, 1f, 1f, 1, 0, 1f)
-                    lastClickTime = now
-                }
-                delay(10L)
+                val interval = 60000L / bpm // milliseconds between clicks
+                soundPool?.play(clickSoundId, 1f, 1f, 1, 0, 1f)
+                delay(interval)
             }
         }
     }
@@ -57,15 +56,16 @@ class MetronomeViewModel(
         job = null
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        job?.cancel()
-    }
     fun forceStop() {
         isPlaying = false
-        job?.cancel()
-        job = null
+        stopClicking()
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        stopClicking()
+    }
+
 }
 
 

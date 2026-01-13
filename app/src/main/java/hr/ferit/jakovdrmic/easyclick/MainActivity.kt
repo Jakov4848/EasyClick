@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import com.google.firebase.FirebaseApp
+
 import hr.ferit.jakovdrmic.easyclick.ui.navigation.AppNavigation
 import hr.ferit.jakovdrmic.easyclick.ui.theme.EasyClickTheme
 
@@ -23,6 +24,8 @@ class MainActivity : ComponentActivity() {
 
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
+
+
 
         // Initialize SoundPool
         soundPool = SoundPool.Builder().setMaxStreams(1).build()

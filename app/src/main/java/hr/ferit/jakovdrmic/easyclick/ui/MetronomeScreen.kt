@@ -22,10 +22,13 @@ import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hr.ferit.jakovdrmic.easyclick.viewmodel.MetronomeViewModel
-import hr.ferit.jakovdrmic.easyclick.viewmodel.MetronomeViewModelFactory
+
+import kotlinx.coroutines.delay
 
 
 @Composable
@@ -34,13 +37,18 @@ fun MetronomeScreen(
     clickSoundId: Int,
     navController: NavController
 ) {
-    val viewModel: MetronomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
-        factory = MetronomeViewModelFactory(soundPool, clickSoundId)
-    )
+    val viewModel: MetronomeViewModel = viewModel()
 
     val bpm = viewModel.bpm
     val isPlaying = viewModel.isPlaying
 
+    // runs once when the screen appears
+    LaunchedEffect(Unit){
+
+        viewModel.init(soundPool,clickSoundId)
+    }
+
+    // runs when leaving the screen
     DisposableEffect(Unit) {
         onDispose {
             viewModel.forceStop()
