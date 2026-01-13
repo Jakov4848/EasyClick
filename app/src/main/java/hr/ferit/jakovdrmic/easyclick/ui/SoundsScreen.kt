@@ -1,4 +1,5 @@
 package hr.ferit.jakovdrmic.easyclick.ui
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,40 +15,46 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import hr.ferit.jakovdrmic.easyclick.viewmodel.NotesViewModel
+import hr.ferit.jakovdrmic.easyclick.data.model.Sound
+import hr.ferit.jakovdrmic.easyclick.data.model.SoundCategory
 
 @Composable
-fun NotesScreen(
-    notesViewModel: NotesViewModel = viewModel(),
+fun SoundsScreen(
     navController: NavController
 ) {
-    val notes by notesViewModel.notes.collectAsState()
-    val text by notesViewModel.text.collectAsState()
+
+    // temp list
+    val sounds = listOf(
+        Sound("1", "click1", "res/raw/click.mp3", SoundCategory.CLASSIC)
+    )
+
+    var selectedSoundID by remember { mutableStateOf<String?>(null) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0x7393B3F0))
+
     ) {
 
         IconButton(
@@ -63,63 +70,57 @@ fun NotesScreen(
             )
         }
 
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(50.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
+            verticalArrangement = Arrangement.Top
         ) {
 
             Spacer(modifier = Modifier.height(48.dp))
 
-            OutlinedTextField(
-                value = text,
-                onValueChange = { notesViewModel.onTextChange(it) },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { notesViewModel.addNote() },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Cyan) // your color
-            ) {
-                Text("Add Note", color = Color.Black)
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Top
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(notes, key = { it.id }) { note ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                items(items=sounds, key = { it.id }) { sound ->
+
+                    val isSelected = sound.id == selectedSoundID
+
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 4.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(
+                                if (isSelected) Color(0xFF4FC3F7) else Color.White
+                            )
+                            .clickable {
+                                selectedSoundID = sound.id
+                            }
+                            .padding(16.dp)
                     ) {
-                        IconButton(
-                            onClick = { notesViewModel.removeNote(note.id) }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Check,
-                                contentDescription = "Delete Note"
+                                imageVector = Icons.Default.MusicNote,
+                                contentDescription = "Sound",
+                                tint = if (isSelected) Color.White else Color.Black
+                            )
+
+                            Spacer(modifier = Modifier.width(16.dp))
+
+                            Text(
+                                text = sound.name,
+                                fontSize = 18.sp,
+                                color = if (isSelected) Color.White else Color.Black,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )
                         }
-
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        Text(
-                            text = note.text,
-                            fontSize = 16.sp
-                        )
                     }
                 }
+
             }
         }
     }

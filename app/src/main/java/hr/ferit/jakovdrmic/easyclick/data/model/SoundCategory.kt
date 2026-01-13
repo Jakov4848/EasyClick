@@ -1,6 +1,6 @@
 package hr.ferit.jakovdrmic.easyclick.data.model
 
-enum class ToneCategory {
+enum class SoundCategory {
     CLASSIC,
     WOOD,
     ELECTRONIC,

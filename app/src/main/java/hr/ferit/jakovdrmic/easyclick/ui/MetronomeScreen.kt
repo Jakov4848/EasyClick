@@ -19,6 +19,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuBook
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.DisposableEffect
@@ -73,6 +74,20 @@ fun MetronomeScreen(
                 modifier = Modifier.size(28.dp)
             )
         }
+
+        IconButton(
+            onClick = { navController.navigate("sounds_screen") },
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(32.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.MusicNote,
+                contentDescription = "Notes",
+                modifier = Modifier.size(28.dp)
+            )
+        }
+
 
         Column(
             modifier = Modifier
