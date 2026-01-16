@@ -1,5 +1,6 @@
 package hr.ferit.jakovdrmic.easyclick.ui
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,25 +35,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hr.ferit.jakovdrmic.easyclick.data.model.Sound
 import hr.ferit.jakovdrmic.easyclick.data.model.SoundCategory
+import hr.ferit.jakovdrmic.easyclick.viewmodel.SoundViewModel
 
 @Composable
 fun SoundsScreen(
-    navController: NavController
+    navController: NavController,
+    soundViewModel: SoundViewModel = viewModel()
 ) {
 
-    // temp list
-    val sounds = listOf(
-        Sound("1", "click1", "res/raw/click.mp3", SoundCategory.CLASSIC),
-        Sound(id = "2", name = "click2", fileUrl = "res/raw/click2.mp3", category = SoundCategory.CLASSIC),
-        Sound(id = "3", name = "click3", fileUrl = "res/raw/click3.mp3", category = SoundCategory.CLASSIC),
-        Sound(id = "4", name = "click3", fileUrl = "res/raw/click4.mp3", category = SoundCategory.CLASSIC),
-        Sound(id = "5", name = "click3", fileUrl = "res/raw/click5.mp3", category = SoundCategory.CLASSIC)
-    )
+    val sounds = soundViewModel.sounds
+    val selectedSound = soundViewModel.selectedSound.value
 
-    var selectedSoundID by remember { mutableStateOf<String?>(null) }
+
 
     Box(
         modifier = Modifier
@@ -90,7 +88,7 @@ fun SoundsScreen(
             ) {
                 items(items=sounds, key = { it.id }) { sound ->
 
-                    val isSelected = sound.id == selectedSoundID
+                    val isSelected = sound.id == selectedSound?.id //use viewmodel state
 
                     Box(
                         modifier = Modifier
@@ -100,7 +98,7 @@ fun SoundsScreen(
                                 if (isSelected) Color.Cyan else Color.White
                             )
                             .clickable {
-                                selectedSoundID = sound.id
+                                soundViewModel.selectSound(sound) //update viewmodel state
                             }
                             .padding(16.dp)
                     ) {
