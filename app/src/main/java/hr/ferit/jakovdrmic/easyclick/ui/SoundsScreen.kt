@@ -24,10 +24,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -37,8 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import hr.ferit.jakovdrmic.easyclick.data.model.Sound
-import hr.ferit.jakovdrmic.easyclick.data.model.SoundCategory
 import hr.ferit.jakovdrmic.easyclick.viewmodel.SoundViewModel
 
 @Composable
@@ -49,8 +43,6 @@ fun SoundsScreen(
 
     val sounds = soundViewModel.sounds
     val selectedSound = soundViewModel.selectedSound.value
-
-
 
     Box(
         modifier = Modifier
@@ -88,7 +80,7 @@ fun SoundsScreen(
             ) {
                 items(items=sounds, key = { it.id }) { sound ->
 
-                    val isSelected = sound.id == selectedSound?.id //use viewmodel state
+                    val isSelected = sound == selectedSound //use viewmodel state
 
                     Box(
                         modifier = Modifier

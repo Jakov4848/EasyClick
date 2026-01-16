@@ -39,8 +39,7 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     AppNavigation(
-                        soundPool = soundPool,
-                        clickSoundId = clickSoundId
+                        soundPool = soundPool
                     )
                 }
             }

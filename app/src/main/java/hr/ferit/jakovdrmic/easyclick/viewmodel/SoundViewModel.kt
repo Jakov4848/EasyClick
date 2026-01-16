@@ -10,7 +10,7 @@ class SoundViewModel : ViewModel() {
 
     val sounds: List<Sound> = SoundData.sounds
 
-    private val _selectedSound = mutableStateOf<Sound?>(null)
+    private val _selectedSound = mutableStateOf<Sound?>(sounds.first())
     val selectedSound: State<Sound?> = _selectedSound
 
     fun selectSound(sound: Sound) {

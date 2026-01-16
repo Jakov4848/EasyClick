@@ -1,6 +1,8 @@
 package hr.ferit.jakovdrmic.easyclick.viewmodel
 
+import android.content.Context
 import android.media.SoundPool
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,10 +14,25 @@ import kotlinx.coroutines.launch
 
 class MetronomeViewModel : ViewModel() {
     private var soundPool: SoundPool? = null
-    private var clickSoundId: Int = 0
-    fun init(soundPool: SoundPool, clickSoundId: Int) {
+    private var clickSoundId: Int? = null
+    private var soundViewModel: SoundViewModel? = null
+
+    private val loadedSounds = mutableMapOf<Int, Int>()
+
+
+
+    fun init(soundPool: SoundPool, soundViewModel: SoundViewModel, context: Context) {
         this.soundPool = soundPool
-        this.clickSoundId = clickSoundId
+        this.soundViewModel = soundViewModel
+
+        // preload all sounds into SoundPool
+        soundViewModel.sounds.forEach { sound->
+            val soundPoolId = soundPool.load(context, sound.resId, 1)
+            loadedSounds[sound.resId] = soundPoolId
+        }
+
+        // set initial clickSoundId
+        clickSoundId = loadedSounds[soundViewModel.selectedSound.value?.resId]
     }
 
     var bpm by mutableStateOf(60)
@@ -45,7 +62,12 @@ class MetronomeViewModel : ViewModel() {
         job = viewModelScope.launch {
             while (isPlaying) {
                 val interval = 60000L / bpm // milliseconds between clicks
-                soundPool?.play(clickSoundId, 1f, 1f, 1, 0, 1f)
+
+                val selectedResId = soundViewModel?.selectedSound?.value?.resId
+                clickSoundId = selectedResId?.let{loadedSounds[it]}
+
+                clickSoundId?.let{soundPool?.play(it, 1f, 1f, 1, 0, 1f)}
+
                 delay(interval)
             }
         }
@@ -65,7 +87,6 @@ class MetronomeViewModel : ViewModel() {
         super.onCleared()
         stopClicking()
     }
-
 }
 
 

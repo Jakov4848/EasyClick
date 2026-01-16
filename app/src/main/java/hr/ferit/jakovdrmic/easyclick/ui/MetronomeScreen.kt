@@ -1,5 +1,6 @@
 package hr.ferit.jakovdrmic.easyclick.ui
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,15 +29,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import hr.ferit.jakovdrmic.easyclick.viewmodel.MetronomeViewModel
+import hr.ferit.jakovdrmic.easyclick.viewmodel.SoundViewModel
 
-import kotlinx.coroutines.delay
 
 
 @Composable
 fun MetronomeScreen(
     soundPool: SoundPool,
-    clickSoundId: Int,
-    navController: NavController
+    soundViewModel: SoundViewModel = viewModel(),
+    navController: NavController,
+    context: Context
 ) {
     val viewModel: MetronomeViewModel = viewModel()
 
@@ -46,7 +48,7 @@ fun MetronomeScreen(
     // runs once when the screen appears
     LaunchedEffect(Unit){
 
-        viewModel.init(soundPool,clickSoundId)
+        viewModel.init(soundPool,soundViewModel, context)
     }
 
     // runs when leaving the screen
