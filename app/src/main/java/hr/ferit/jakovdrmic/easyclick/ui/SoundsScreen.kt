@@ -45,7 +45,11 @@ fun SoundsScreen(
 
     // temp list
     val sounds = listOf(
-        Sound("1", "click1", "res/raw/click.mp3", SoundCategory.CLASSIC)
+        Sound("1", "click1", "res/raw/click.mp3", SoundCategory.CLASSIC),
+        Sound(id = "2", name = "click2", fileUrl = "res/raw/click2.mp3", category = SoundCategory.CLASSIC),
+        Sound(id = "3", name = "click3", fileUrl = "res/raw/click3.mp3", category = SoundCategory.CLASSIC),
+        Sound(id = "4", name = "click3", fileUrl = "res/raw/click4.mp3", category = SoundCategory.CLASSIC),
+        Sound(id = "5", name = "click3", fileUrl = "res/raw/click5.mp3", category = SoundCategory.CLASSIC)
     )
 
     var selectedSoundID by remember { mutableStateOf<String?>(null) }
@@ -93,7 +97,7 @@ fun SoundsScreen(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(12.dp))
                             .background(
-                                if (isSelected) Color(0xFF4FC3F7) else Color.White
+                                if (isSelected) Color.Cyan else Color.White
                             )
                             .clickable {
                                 selectedSoundID = sound.id
