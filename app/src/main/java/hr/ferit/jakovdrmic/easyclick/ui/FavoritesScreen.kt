@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import hr.ferit.jakovdrmic.easyclick.data.SoundData.sounds
 import hr.ferit.jakovdrmic.easyclick.viewmodel.SoundViewModel
 
 @Composable
