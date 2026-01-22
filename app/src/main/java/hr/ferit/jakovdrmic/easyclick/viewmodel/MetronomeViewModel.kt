@@ -2,7 +2,6 @@ package hr.ferit.jakovdrmic.easyclick.viewmodel
 
 import android.content.Context
 import android.media.SoundPool
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -16,10 +15,7 @@ class MetronomeViewModel : ViewModel() {
     private var soundPool: SoundPool? = null
     private var clickSoundId: Int? = null
     private var soundViewModel: SoundViewModel? = null
-
     private val loadedSounds = mutableMapOf<Int, Int>()
-
-
 
     fun init(soundPool: SoundPool, soundViewModel: SoundViewModel, context: Context) {
         this.soundPool = soundPool
@@ -88,8 +84,3 @@ class MetronomeViewModel : ViewModel() {
         stopClicking()
     }
 }
-
-
-
-
-

@@ -1,6 +1,5 @@
 package hr.ferit.jakovdrmic.easyclick.ui
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
@@ -35,16 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import hr.ferit.jakovdrmic.easyclick.data.SoundData.sounds
 import hr.ferit.jakovdrmic.easyclick.viewmodel.SoundViewModel
 
 @Composable
-fun SoundsScreen(
+fun FavoritesScreen(
     navController: NavController,
     soundViewModel: SoundViewModel = viewModel()
 ) {
+    val favoriteSounds = soundViewModel.favoriteSounds
 
-    val sounds = soundViewModel.sounds
-    val selectedSound = soundViewModel.selectedSound.value
 
     Box(
         modifier = Modifier
@@ -54,30 +52,18 @@ fun SoundsScreen(
     ) {
 
         IconButton(
-            onClick = { navController.navigate("favorites_screen") },
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .padding(32.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "Favorites",
-                modifier = Modifier.size(28.dp)
-            )
-        }
-
-        IconButton(
-            onClick = { navController.navigate("metronome_screen") },
+            onClick = { navController.navigate("sounds_screen") },
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(32.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.Home,
-                contentDescription = "Back",
+                imageVector = Icons.Default.MusicNote,
+                contentDescription = "Favorites",
                 modifier = Modifier.size(28.dp)
             )
         }
+
 
         Column(
             modifier = Modifier
@@ -93,9 +79,9 @@ fun SoundsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(items=sounds, key = { it.id }) { sound ->
+                items(items=favoriteSounds, key = { it.id }) { sound ->
 
-                    val isSelected = sound == selectedSound //use viewmodel state
+                    val isSelected = sound == soundViewModel.selectedSound.value
 
                     Box(
                         modifier = Modifier
@@ -126,7 +112,9 @@ fun SoundsScreen(
                                 color = if (isSelected) Color.White else Color.Black,
                                 fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
                             )
+
                             Spacer(modifier = Modifier.weight(1f))
+
                             Icon(
                                 imageVector = if (soundViewModel.isFavorite(sound))
                                     Icons.Filled.Star

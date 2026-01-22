@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
         FirebaseApp.initializeApp(this)
 
 
-
         // Initialize SoundPool
         soundPool = SoundPool.Builder().setMaxStreams(1).build()
         clickSoundId = soundPool.load(this, R.raw.click, 1)

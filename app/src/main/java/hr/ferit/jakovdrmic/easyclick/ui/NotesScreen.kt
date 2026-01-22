@@ -53,7 +53,7 @@ fun NotesScreen(
         IconButton(
             onClick = { navController.navigate("metronome_screen") },
             modifier = Modifier
-                .align(Alignment.TopEnd)
+                .align(Alignment.TopStart)
                 .padding(32.dp)
         ) {
             Icon(
